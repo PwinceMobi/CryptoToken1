@@ -47,6 +47,18 @@
   :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:2px}
   h2.section{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.02em;margin:0 0 20px;position:relative;padding-top:16px}
   h2.section::before{content:"";position:absolute;top:0;left:0;width:52px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--bronze))}
+  .reveal h2.section::before{width:0;transition:width .8s cubic-bezier(.2,.8,.2,1) .15s}
+  .reveal.in-view h2.section::before{width:52px}
+
+  /* ---- scroll progress bar ---- */
+  .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--gold),var(--bronze));z-index:9997;box-shadow:0 0 10px rgba(240,212,138,.6);pointer-events:none}
+
+  /* ---- glass panel ---- */
+  .panel{
+    background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015));
+    border:1px solid rgba(240,212,138,.18);border-radius:18px;
+    padding:26px 28px;box-shadow:0 20px 50px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.06);
+  }
 
   /* ---- scroll reveal ---- */
   .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
@@ -140,10 +152,22 @@
   @media (pointer:coarse){.art:active{transform:scale(.98)}}
   .art img{width:100%;height:100%;object-fit:cover;display:block}
   .art-badge{position:absolute;bottom:14px;right:14px;background:var(--gold);color:var(--deep);font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px;box-shadow:0 8px 18px rgba(0,0,0,.35);display:inline-flex;align-items:center;gap:6px;z-index:2}
+  .scroll-cue{
+    position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    color:var(--cream);opacity:.75;text-decoration:none;
+    font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    transition:opacity .4s ease;
+  }
+  .scroll-cue:hover{opacity:1;color:var(--gold)}
+  .scroll-cue.hide{opacity:0;pointer-events:none}
+  .scroll-cue .chevron{font-size:16px;line-height:1;animation:bounceDown 1.8s ease-in-out infinite}
+  @keyframes bounceDown{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(6px);opacity:1}}
 
   /* ---- contract strip ---- */
   .strip{background:var(--deep);padding:30px 0;position:relative}
   .strip h2{font-size:15px;font-weight:600;margin:0 0 10px;opacity:.75}
+  .strip .panel{padding:22px 24px}
   .ca{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
   .ca code{flex:1 1 380px;min-width:0;font-family:ui-monospace,Menlo,monospace;font-size:15px;background:rgba(0,0,0,.3);padding:14px 16px;border-radius:10px;overflow-x:auto;white-space:nowrap;color:var(--cream);border:1px solid rgba(240,212,138,.25)}
   button.copy{position:relative;overflow:hidden;font-family:inherit;font-size:16px;font-weight:600;background:var(--gold);color:var(--deep);border:0;padding:14px 26px;border-radius:10px;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
@@ -152,7 +176,8 @@
   .verify{margin:12px 0 0;font-size:14px;opacity:.8}
 
   /* ---- lore ---- */
-  .lore{padding:76px 0}
+  .lore{padding:76px 0;position:relative;overflow:hidden}
+  .lore::before{content:"👑";position:absolute;top:50%;right:-20px;transform:translateY(-50%);font-size:280px;line-height:1;opacity:.045;z-index:-1;pointer-events:none}
   .lore-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start}
   .lore p{max-width:60ch}
   .claims{list-style:none;margin:26px 0 0;padding:0;border-top:1px solid var(--rule)}
@@ -163,18 +188,23 @@
   blockquote{margin:34px 0 0;padding:22px 26px;background:var(--deep);border-radius:14px;font-family:"Bricolage Grotesque",sans-serif;font-size:21px;line-height:1.35;border-left:5px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.2)}
 
   /* ---- tax & buyback / tokenomics ---- */
-  .tk{padding:70px 0;background:var(--deep);border-top:1px solid var(--rule)}
+  .tk{padding:70px 0;background:radial-gradient(ellipse 900px 500px at 15% 0%,rgba(240,212,138,.06),transparent 60%),var(--deep);border-top:1px solid var(--rule);position:relative;overflow:hidden}
+  #buyback::before{content:"🔁";position:absolute;top:8%;right:-30px;font-size:220px;line-height:1;opacity:.045;z-index:-1;pointer-events:none}
+  #tokenomics::before{content:"🦌";position:absolute;bottom:0;left:-40px;font-size:260px;line-height:1;opacity:.045;z-index:-1;pointer-events:none}
   .tax-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(240,212,138,.12);border:1px solid rgba(240,212,138,.4);color:var(--gold);font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:15px;padding:10px 18px;border-radius:999px;margin:0 0 26px}
   .subhead{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(20px,2.6vw,26px);font-weight:700;margin:38px 0 12px;color:var(--cream)}
   .tk .claims{max-width:70ch}
+  .tk .panel{margin-top:22px}
   .supply{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 8px}
   .supply b{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(38px,7vw,68px);font-weight:800;letter-spacing:-.03em;color:var(--gold);line-height:1;text-shadow:0 0 32px rgba(240,212,138,.35);font-variant-numeric:tabular-nums}
   .supply em{font-style:normal;font-size:17px;opacity:.82}
-  table{width:100%;border-collapse:collapse;margin:28px 0 0;font-size:16px}
-  th,td{text-align:left;padding:14px 6px;border-bottom:1px solid var(--rule);transition:background .2s ease}
+  table{width:100%;border-collapse:collapse;font-size:16px}
+  th,td{text-align:left;padding:14px 10px;border-bottom:1px solid var(--rule);transition:background .2s ease}
   th{font-weight:600;opacity:.75;font-size:14px}
   td:last-child{text-align:right;font-weight:600}
-  tbody tr:hover th,tbody tr:hover td{background:rgba(240,212,138,.06)}
+  tbody tr:nth-child(even) th,tbody tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+  tbody tr:hover th,tbody tr:hover td{background:rgba(240,212,138,.08)}
+  tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 
   /* ---- how to buy ---- */
   .buy{padding:76px 0}
@@ -242,8 +272,9 @@
   .li-text span{opacity:.75;font-size:13px;font-family:ui-monospace,Menlo,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
   /* ---- manifesto ---- */
-  .manifesto{padding:80px 0;text-align:center;position:relative}
-  .manifesto p{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(20px,3vw,30px);line-height:1.35;font-weight:700;max-width:34ch;margin:0 auto;letter-spacing:-.02em}
+  .manifesto{padding:80px 0;text-align:center;position:relative;overflow:hidden}
+  .manifesto::before{content:"🦌";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:360px;line-height:1;opacity:.04;z-index:-1;pointer-events:none}
+  .manifesto p{position:relative;font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(20px,3vw,30px);line-height:1.35;font-weight:700;max-width:34ch;margin:0 auto;letter-spacing:-.02em}
   .manifesto p + p{margin-top:16px}
   .manifesto .last{color:var(--gold);margin-top:22px;text-shadow:0 0 28px rgba(240,212,138,.5)}
 
@@ -302,6 +333,8 @@
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
+
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
     <span>🦌 FAIR LAUNCH</span><span class="dot">·</span><span>2% AUTO-BUYBACK</span><span class="dot">·</span><span>LIQUIDITY LOCKED</span><span class="dot">·</span><span>COMMUNITY OWNED</span><span class="dot">·</span><span>0% TEAM ALLOCATION</span><span class="dot">·</span><span>$HART</span><span class="dot">·</span>
@@ -359,6 +392,9 @@
       <span class="art-badge">🦌 Fair Launch</span>
     </div>
   </div>
+  <a href="#connection" class="scroll-cue" id="scrollCue" aria-label="Scroll to explore the page">
+    <span>Scroll</span><span class="chevron">⌄</span>
+  </a>
 </header>
 
 <section class="memes" id="memes">
@@ -392,12 +428,14 @@
 <section class="strip reveal">
   <div class="wrap">
     <h2>Contract address</h2>
-    <div class="ca">
-      <!-- EDIT: paste the real contract address -->
-      <code id="addr">0x0000000000000000000000000000000000000000</code>
-      <button class="copy" id="copyBtn" type="button">Copy address</button>
+    <div class="panel">
+      <div class="ca">
+        <!-- EDIT: paste the real contract address -->
+        <code id="addr">0x0000000000000000000000000000000000000000</code>
+        <button class="copy" id="copyBtn" type="button">Copy address</button>
+      </div>
+      <p class="verify">Check this address before you swap. Anyone can deploy a token with the same name and the same stag.</p>
     </div>
-    <p class="verify">Check this address before you swap. Anyone can deploy a token with the same name and the same stag.</p>
   </div>
 </section>
 
@@ -422,12 +460,14 @@
   <div class="wrap">
     <h2 class="section">🦌 Tax &amp; Buyback Mechanism</h2>
     <p class="tax-badge">2% Buy · 2% Sell — Automatic Buyback</p>
-    <table>
-      <tbody>
-        <tr><th>Buy Tax</th><td>2%</td></tr>
-        <tr><th>Sell Tax</th><td>2%</td></tr>
-      </tbody>
-    </table>
+    <div class="panel">
+      <table>
+        <tbody>
+          <tr><th>Buy Tax</th><td>2%</td></tr>
+          <tr><th>Sell Tax</th><td>2%</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <h3 class="subhead">🔁 How It Works — Every Tax Buys $HART</h3>
     <p style="max-width:65ch;opacity:.93">Every 2% fee on buys &amp; sells is <strong>not</strong> sent to a wallet — it is instantly and automatically used to buy back $HART tokens and add to liquidity.</p>
@@ -451,18 +491,20 @@
       <b id="supplyNum" data-target="1000000000">0</b>
       <em>total supply of $HART</em>
     </div>
-    <table>
-      <tbody>
-        <tr><th>Ticker</th><td>$HART</td></tr>
-        <tr><th>Chain</th><td>Robinhood Network</td></tr>
-        <tr><th>Total Supply</th><td>1,000,000,000</td></tr>
-        <tr><th>Buy Tax</th><td>2% → Auto-Buyback</td></tr>
-        <tr><th>Sell Tax</th><td>2% → Auto-Buyback</td></tr>
-        <tr><th>Liquidity</th><td>🔒 Fully Locked</td></tr>
-        <tr><th>Launch</th><td>100% Fair — No Presale, No VCs</td></tr>
-        <tr><th>Team Tokens</th><td>0%</td></tr>
-      </tbody>
-    </table>
+    <div class="panel">
+      <table>
+        <tbody>
+          <tr><th>Ticker</th><td>$HART</td></tr>
+          <tr><th>Chain</th><td>Robinhood Network</td></tr>
+          <tr><th>Total Supply</th><td>1,000,000,000</td></tr>
+          <tr><th>Buy Tax</th><td>2% → Auto-Buyback</td></tr>
+          <tr><th>Sell Tax</th><td>2% → Auto-Buyback</td></tr>
+          <tr><th>Liquidity</th><td>🔒 Fully Locked</td></tr>
+          <tr><th>Launch</th><td>100% Fair — No Presale, No VCs</td></tr>
+          <tr><th>Team Tokens</th><td>0%</td></tr>
+        </tbody>
+      </table>
+    </div>
     <!-- EDIT: paste your liquidity lock proof link, or delete this line -->
     <p style="margin:18px 0 0;font-size:15px;opacity:.85">Liquidity lock proof: <a href="#">view the lock</a></p>
   </div>
@@ -629,6 +671,26 @@
       document.addEventListener('visibilitychange', () => { document.hidden ? pause() : play(); });
       play();
     }
+  })();
+
+  /* ---- scroll progress bar ---- */
+  (function () {
+    const bar = document.getElementById('scrollProgress');
+    if (!bar) return;
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.width = (max > 0 ? Math.min(100, (scrollY / max) * 100) : 0) + '%';
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    onScroll();
+  })();
+
+  /* ---- hero scroll cue: fade once the visitor starts scrolling ---- */
+  (function () {
+    const cue = document.getElementById('scrollCue');
+    if (!cue) return;
+    addEventListener('scroll', () => cue.classList.toggle('hide', scrollY > 60), { passive: true });
   })();
 
   /* ---- sticky nav: scrolled state + active section tracking ---- */
