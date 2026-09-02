@@ -72,13 +72,48 @@
   nav a.active{opacity:1;color:var(--gold)}
 
   /* ---- hero ---- */
-  header.hero{position:relative;overflow:hidden;isolation:isolate}
-  .hero{padding:52px 0 70px;display:grid;gap:44px;grid-template-columns:1.1fr .9fr;align-items:center}
-  .hero::before,.hero::after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(70px);pointer-events:none}
-  .hero::before{width:440px;height:440px;background:radial-gradient(circle,rgba(240,212,138,.38),transparent 70%);top:-160px;right:-100px;animation:floatBlob1 10s ease-in-out infinite}
-  .hero::after{width:380px;height:380px;background:radial-gradient(circle,rgba(201,144,63,.32),transparent 70%);bottom:-140px;left:-120px;animation:floatBlob2 12s ease-in-out infinite}
+  header.hero-outer{position:relative;overflow:hidden;isolation:isolate}
+  .hero{padding:52px 0 70px;display:grid;gap:44px;grid-template-columns:1.1fr .9fr;align-items:center;position:relative;z-index:2}
+  header.hero-outer::before,header.hero-outer::after{content:"";position:absolute;z-index:0;border-radius:50%;filter:blur(70px);pointer-events:none}
+  header.hero-outer::before{width:520px;height:520px;background:radial-gradient(circle,rgba(240,212,138,.4),transparent 70%);top:-180px;right:2%;animation:floatBlob1 10s ease-in-out infinite}
+  header.hero-outer::after{width:460px;height:460px;background:radial-gradient(circle,rgba(201,144,63,.34),transparent 70%);bottom:-160px;left:4%;animation:floatBlob2 12s ease-in-out infinite}
   @keyframes floatBlob1{0%,100%{transform:translate(0,0)}50%{transform:translate(-26px,28px)}}
   @keyframes floatBlob2{0%,100%{transform:translate(0,0)}50%{transform:translate(22px,-24px)}}
+
+  /* ---- hero background: fireflies, drifting leaves, treeline ---- */
+  .hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+  .firefly{
+    position:absolute;left:var(--x);top:var(--y);width:6px;height:6px;border-radius:50%;
+    background:var(--gold);opacity:.6;
+    box-shadow:0 0 8px 2px rgba(240,212,138,.75),0 0 22px 6px rgba(240,212,138,.3);
+    animation:fireflyFloat var(--dur,9s) ease-in-out infinite;animation-delay:var(--delay,0s);
+  }
+  @keyframes fireflyFloat{
+    0%{opacity:0;transform:translate(0,0) scale(.5)}
+    15%{opacity:.95}
+    50%{opacity:.45;transform:translate(var(--dx,20px),var(--dy,-50px)) scale(1.15)}
+    85%{opacity:.85}
+    100%{opacity:0;transform:translate(calc(var(--dx,20px) * -.4),calc(var(--dy,-50px) * 1.8)) scale(.5)}
+  }
+  .leaf{
+    position:absolute;top:-40px;left:var(--x);font-size:20px;opacity:.8;
+    animation:leafFall var(--dur,15s) linear infinite;animation-delay:var(--delay,0s);
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));
+  }
+  @keyframes leafFall{
+    0%{transform:translate(0,-40px) rotate(0deg);opacity:0}
+    8%{opacity:.85}
+    50%{transform:translate(30px,50vh) rotate(var(--rot,180deg))}
+    92%{opacity:.7}
+    100%{transform:translate(-24px,calc(100% + 60px)) rotate(calc(var(--rot,180deg) * 2));opacity:0}
+  }
+  .treeline{
+    position:absolute;left:0;right:0;bottom:-2px;height:88px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='90' viewBox='0 0 64 90'%3E%3Cpolygon points='32,6 8,52 22,52 2,90 62,90 42,52 56,52' fill='%230E2415'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;background-position:bottom;background-size:64px 90px;
+    opacity:.55;
+  }
+  @media (prefers-reduced-motion:reduce){.firefly,.leaf{opacity:.5;animation:none}}
   .chain{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;opacity:.88;margin:0 0 18px}
   .chain span{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulseDot 2s ease-out infinite}
   @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(240,212,138,.55)}70%{box-shadow:0 0 0 10px rgba(240,212,138,0)}100%{box-shadow:0 0 0 0 rgba(240,212,138,0)}}
@@ -126,8 +161,11 @@
   .claims span{opacity:.82;font-size:15px}
   blockquote{margin:34px 0 0;padding:22px 26px;background:var(--deep);border-radius:14px;font-family:"Bricolage Grotesque",sans-serif;font-size:21px;line-height:1.35;border-left:5px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.2)}
 
-  /* ---- tokenomics ---- */
-  .tk{padding:70px 0;background:var(--deep)}
+  /* ---- tax & buyback / tokenomics ---- */
+  .tk{padding:70px 0;background:var(--deep);border-top:1px solid var(--rule)}
+  .tax-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(240,212,138,.12);border:1px solid rgba(240,212,138,.4);color:var(--gold);font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:15px;padding:10px 18px;border-radius:999px;margin:0 0 26px}
+  .subhead{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(20px,2.6vw,26px);font-weight:700;margin:38px 0 12px;color:var(--cream)}
+  .tk .claims{max-width:70ch}
   .supply{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 8px}
   .supply b{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(38px,7vw,68px);font-weight:800;letter-spacing:-.03em;color:var(--gold);line-height:1;text-shadow:0 0 32px rgba(240,212,138,.35);font-variant-numeric:tabular-nums}
   .supply em{font-style:normal;font-size:17px;opacity:.82}
@@ -146,6 +184,7 @@
   ol.steps li:hover::before{box-shadow:0 8px 22px rgba(240,212,138,.55)}
   ol.steps b{display:block;font-size:18px;margin:0 0 2px}
   ol.steps span{opacity:.85}
+  .buy-callout{margin:34px 0 0;max-width:70ch;padding:16px 20px;background:rgba(240,212,138,.1);border:1px solid rgba(240,212,138,.35);border-radius:12px;font-weight:600;font-size:15.5px}
 
   /* ---- meme slider ---- */
   .memes{padding:38px 0 42px;background:var(--deep);border-bottom:1px solid var(--rule)}
@@ -186,7 +225,7 @@
   @media (hover:none){.arrow{display:none}}
 
   /* ---- links directory ---- */
-  .linkdir{padding:70px 0;background:var(--deep)}
+  .linkdir{padding:70px 0;background:var(--deep);border-top:1px solid var(--rule)}
   .linklist{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
   .linklist li{margin:0}
   .linklist a{
@@ -241,8 +280,8 @@
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span>🦌 FAIR LAUNCH</span><span class="dot">·</span><span>ZERO TAX</span><span class="dot">·</span><span>LIQUIDITY LOCKED</span><span class="dot">·</span><span>COMMUNITY OWNED</span><span class="dot">·</span><span>0% TEAM ALLOCATION</span><span class="dot">·</span><span>$HART</span><span class="dot">·</span>
-    <span>🦌 FAIR LAUNCH</span><span class="dot">·</span><span>ZERO TAX</span><span class="dot">·</span><span>LIQUIDITY LOCKED</span><span class="dot">·</span><span>COMMUNITY OWNED</span><span class="dot">·</span><span>0% TEAM ALLOCATION</span><span class="dot">·</span><span>$HART</span><span class="dot">·</span>
+    <span>🦌 FAIR LAUNCH</span><span class="dot">·</span><span>2% AUTO-BUYBACK</span><span class="dot">·</span><span>LIQUIDITY LOCKED</span><span class="dot">·</span><span>COMMUNITY OWNED</span><span class="dot">·</span><span>0% TEAM ALLOCATION</span><span class="dot">·</span><span>$HART</span><span class="dot">·</span>
+    <span>🦌 FAIR LAUNCH</span><span class="dot">·</span><span>2% AUTO-BUYBACK</span><span class="dot">·</span><span>LIQUIDITY LOCKED</span><span class="dot">·</span><span>COMMUNITY OWNED</span><span class="dot">·</span><span>0% TEAM ALLOCATION</span><span class="dot">·</span><span>$HART</span><span class="dot">·</span>
   </div>
 </div>
 
@@ -251,30 +290,50 @@
     <b>$HART</b>
     <a href="#memes">Memes</a>
     <a href="#connection">The Connection</a>
+    <a href="#buyback">Buyback</a>
     <a href="#tokenomics">Tokenomics</a>
     <a href="#links">Links</a>
     <a href="#buy">How to buy</a>
   </div>
 </nav>
 
-<header class="wrap hero">
-  <div>
-    <p class="chain"><span></span>⚔️ Built on Robinhood Network</p>
-    <h1>$HART</h1>
-    <p class="sub">The White Stag of Sherwood</p>
-    <p class="pitch">Before they were called stags… they were called HART. The ancient name. The Robinhood legend. The people's token.</p>
-    <div class="cta">
-      <!-- EDIT: swap link (Robinhood DEX pool) -->
-      <a class="btn primary" href="#">🚀 Buy $HART</a>
-      <!-- EDIT: DexScreener link -->
-      <a class="btn ghost" href="#">📊 Chart</a>
-      <!-- EDIT: Telegram link -->
-      <a class="btn ghost" href="#">📱 Telegram</a>
-    </div>
+<header class="hero-outer">
+  <div class="hero-bg" aria-hidden="true">
+    <span class="firefly" style="--x:5%;--y:78%;--dur:9s;--delay:0s;--dx:26px;--dy:-60px"></span>
+    <span class="firefly" style="--x:12%;--y:30%;--dur:11s;--delay:1.2s;--dx:-18px;--dy:-70px"></span>
+    <span class="firefly" style="--x:22%;--y:60%;--dur:8s;--delay:2.4s;--dx:22px;--dy:-45px"></span>
+    <span class="firefly" style="--x:35%;--y:15%;--dur:10s;--delay:.6s;--dx:-24px;--dy:-55px"></span>
+    <span class="firefly" style="--x:48%;--y:82%;--dur:12s;--delay:3s;--dx:16px;--dy:-65px"></span>
+    <span class="firefly" style="--x:58%;--y:40%;--dur:9.5s;--delay:1.8s;--dx:-20px;--dy:-50px"></span>
+    <span class="firefly" style="--x:68%;--y:70%;--dur:10.5s;--delay:.3s;--dx:24px;--dy:-60px"></span>
+    <span class="firefly" style="--x:76%;--y:20%;--dur:8.5s;--delay:2.1s;--dx:-16px;--dy:-40px"></span>
+    <span class="firefly" style="--x:85%;--y:55%;--dur:11.5s;--delay:3.6s;--dx:20px;--dy:-70px"></span>
+    <span class="firefly" style="--x:92%;--y:85%;--dur:9.2s;--delay:1.5s;--dx:-14px;--dy:-50px"></span>
+    <span class="firefly" style="--x:15%;--y:88%;--dur:10.8s;--delay:4.2s;--dx:18px;--dy:-60px"></span>
+    <span class="firefly" style="--x:63%;--y:10%;--dur:9.8s;--delay:2.8s;--dx:-22px;--dy:-48px"></span>
+    <span class="leaf" style="--x:10%;--dur:14s;--delay:0s;--rot:180deg">🍃</span>
+    <span class="leaf" style="--x:40%;--dur:17s;--delay:4s;--rot:-160deg">🍃</span>
+    <span class="leaf" style="--x:70%;--dur:15.5s;--delay:8s;--rot:200deg">🍂</span>
+    <span class="leaf" style="--x:88%;--dur:16s;--delay:2s;--rot:-140deg">🍃</span>
+    <div class="treeline"></div>
   </div>
-  <div class="art">
-    <img src="images/token.jpg" alt="The $HART stag: a white deer with gold antlers and a gold chain">
-    <span class="art-badge">🦌 Fair Launch</span>
+  <div class="wrap hero">
+    <div>
+      <p class="chain"><span></span>⚔️ Built on Robinhood Network</p>
+      <h1>$HART</h1>
+      <p class="sub">The White Stag of Sherwood</p>
+      <p class="pitch">Before they were called stags… they were called HART. The ancient name. The Robinhood legend. The people's token.</p>
+      <div class="cta">
+        <!-- EDIT: swap link (Robinhood DEX pool) -->
+        <a class="btn primary" href="#">🚀 Buy $HART</a>
+        <!-- EDIT: DexScreener link -->
+        <a class="btn ghost" href="#">📊 Chart</a>
+      </div>
+    </div>
+    <div class="art">
+      <img src="images/token.jpg" alt="The $HART stag: a white deer with gold antlers and a gold chain">
+      <span class="art-badge">🦌 Fair Launch</span>
+    </div>
   </div>
 </header>
 
@@ -335,6 +394,31 @@
   </div>
 </section>
 
+<section class="tk reveal" id="buyback">
+  <div class="wrap">
+    <h2 class="section">🦌 Tax &amp; Buyback Mechanism</h2>
+    <p class="tax-badge">2% Buy · 2% Sell — Automatic Buyback</p>
+    <table>
+      <tbody>
+        <tr><th>Buy Tax</th><td>2%</td></tr>
+        <tr><th>Sell Tax</th><td>2%</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subhead">🔁 How It Works — Every Tax Buys $HART</h3>
+    <p style="max-width:65ch;opacity:.93">Every 2% fee on buys &amp; sells is <strong>not</strong> sent to a wallet — it is instantly and automatically used to buy back $HART tokens and add to liquidity.</p>
+
+    <ul class="claims">
+      <li>✅ No team tax. No wallet distributions. No hidden fees.</li>
+      <li>✅ 100% of all tax → auto-buyback + liquidity locked</li>
+      <li>✅ Reduces circulating supply → supports price → benefits every holder</li>
+      <li>✅ Continuous buying pressure on every transaction</li>
+    </ul>
+
+    <blockquote>Every trade feeds the herd. Every buy &amp; sell automatically buys more $HART — forever.</blockquote>
+  </div>
+</section>
+
 <section class="tk reveal" id="tokenomics">
   <div class="wrap">
     <h2 class="section">🦌 Token Details</h2>
@@ -348,10 +432,11 @@
         <tr><th>Ticker</th><td>$HART</td></tr>
         <tr><th>Chain</th><td>Robinhood Network</td></tr>
         <tr><th>Total Supply</th><td>1,000,000,000</td></tr>
-        <tr><th>Buy Tax</th><td>0%</td></tr>
-        <tr><th>Sell Tax</th><td>0%</td></tr>
+        <tr><th>Buy Tax</th><td>2% → Auto-Buyback</td></tr>
+        <tr><th>Sell Tax</th><td>2% → Auto-Buyback</td></tr>
         <tr><th>Liquidity</th><td>🔒 Fully Locked</td></tr>
-        <tr><th>Launch</th><td>100% Fair — No Presale, No VCs, No Team Tokens</td></tr>
+        <tr><th>Launch</th><td>100% Fair — No Presale, No VCs</td></tr>
+        <tr><th>Team Tokens</th><td>0%</td></tr>
       </tbody>
     </table>
     <!-- EDIT: paste your liquidity lock proof link, or delete this line -->
@@ -375,8 +460,6 @@
       <li><a href="#"><span class="li-icon">🌐</span><span class="li-text"><b>Robinhood Network</b><span>Network info &amp; docs</span></span></a></li>
       <!-- EDIT: X (Twitter) link -->
       <li><a href="#"><span class="li-icon">🐦</span><span class="li-text"><b>X</b><span>@Hart_Official</span></span></a></li>
-      <!-- EDIT: Telegram link -->
-      <li><a href="#"><span class="li-icon">✉️</span><span class="li-text"><b>Telegram</b><span>Join the herd</span></span></a></li>
     </ul>
   </div>
 </section>
@@ -390,6 +473,7 @@
     <li><b>Paste the contract address</b><span>Use the address at the top of this page, not one from a chat message.</span></li>
     <li><b>Swap</b><span>Set slippage to about 1%, confirm, and welcome to the herd.</span></li>
   </ol>
+  <p class="buy-callout">🔁 Every trade you make automatically buys back $HART — supports the whole herd.</p>
 </section>
 
 <section class="manifesto wrap reveal">
@@ -404,7 +488,6 @@
     <ul class="links">
       <li><span style="opacity:.72">CA:</span> <code id="addrFooter">0x0000000000000000000000000000000000000000</code></li>
       <li><a href="#">X</a></li>
-      <li><a href="#">Telegram</a></li>
       <li><a href="#">Robinhood Network</a></li>
     </ul>
     <p class="risk">$HART is a meme coin. There is no company behind it, no revenue, and no promise of profit. Crypto assets are volatile and you can lose everything you put in. Nothing on this page is financial advice — do your own research.</p>
